@@ -30,6 +30,7 @@ export const Draw = L.Class.extend({
     opacity: 0.3
   },
   targetOptions: {
+    hideWhenEnd: true,
     useImg: false,
     imgUrl: '../../static/images/ship.png',
     showText: false,
@@ -68,6 +69,9 @@ export const Draw = L.Class.extend({
       this._trackPointFeatureGroup = L.featureGroup([]).addTo(map)
     }
 
+    // 当前正在画的轨迹的总点数
+    this._trackPointCount = 0
+
     // 目标如果使用图片，先加载图片
     if (this.targetOptions.useImg) {
       const img = new Image()
@@ -85,9 +89,10 @@ export const Draw = L.Class.extend({
     this._trackLayerUpdate()
   },
 
-  drawTrack: function (trackpoints) {
+  drawTrack: function (trackpoints, count) {
     this._bufferTracks.push(trackpoints)
     this._drawTrack(trackpoints)
+    this._trackPointCount = count
   },
 
   showTrackPoint: function () {
@@ -120,6 +125,7 @@ export const Draw = L.Class.extend({
     if (this._map.hasLayer(this._trackPointFeatureGroup)) {
       this._map.removeLayer(this._trackPointFeatureGroup)
     }
+    this._trackPointCount = 0
   },
 
   clear: function () {
@@ -177,11 +183,18 @@ export const Draw = L.Class.extend({
     }
     // 画船
     let targetPoint = trackpoints[trackpoints.length - 1]
-    if (this.targetOptions.useImg && this._targetImg) {
-      this._drawShipImage(targetPoint)
-    } else {
-      this._drawShipCanvas(targetPoint)
+    let showTarget = true
+    if (trackpoints.length === this._trackPointCount && this.targetOptions.hideWhenEnd) {
+      showTarget = false
     }
+    if (showTarget) {
+      if (this.targetOptions.useImg && this._targetImg) {
+        this._drawShipImage(targetPoint)
+      } else {
+        this._drawShipCanvas(targetPoint)
+      }
+    }
+
     // 画标注信息
     if (this.targetOptions.showText) {
       this._drawtxt(`航向：${parseInt(targetPoint.dir)}度`, targetPoint)

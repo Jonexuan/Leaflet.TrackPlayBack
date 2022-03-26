@@ -132,6 +132,8 @@ const Options = {
   },
   // target options
   targetOptions: {
+    // wheter hide target when arrived at the last point
+    hideWhenEnd: false,
     // whether use image to display target, if false, the program provide a default
     useImg: false,
     // if useImg is true, provide the imgUrl

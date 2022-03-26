@@ -50,7 +50,7 @@ export const TrackController = L.Class.extend({
     for (let i = 0, len = this._tracks.length; i < len; i++) {
       let track = this._tracks[i]
       let tps = track.getTrackPointsBeforeTime(time)
-      if (tps && tps.length) this._draw.drawTrack(tps)
+      if (tps && tps.length) this._draw.drawTrack(tps, track._trackPoints.length)
     }
   },
 

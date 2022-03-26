@@ -32,3 +32,6 @@ node_modules
 
 # vscode 的历史记录文件
 .history
+
+#mac
+.DS_Store
