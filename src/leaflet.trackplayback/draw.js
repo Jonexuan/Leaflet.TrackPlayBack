@@ -3,6 +3,7 @@ import L from 'leaflet'
 import {
   TrackLayer
 } from './tracklayer'
+import * as util from './util'
 
 /**
  * 绘制类
@@ -30,7 +31,7 @@ export const Draw = L.Class.extend({
     opacity: 0.3
   },
   targetOptions: {
-    hideWhenEnd: true,
+    hideWhenEnd: false,
     useImg: false,
     imgUrl: '../../static/images/ship.png',
     showText: false,
@@ -181,7 +182,7 @@ export const Draw = L.Class.extend({
     if (this._showTrackLine) {
       this._drawTrackLine(trackpoints)
     }
-    // 画船
+    // 画目标
     let targetPoint = trackpoints[trackpoints.length - 1]
     let showTarget = true
     if (trackpoints.length === this._trackPointCount && this.targetOptions.hideWhenEnd) {
@@ -209,6 +210,14 @@ export const Draw = L.Class.extend({
     }
   },
 
+  _getTrackLineColor (options, point) {
+    if (util.isFunction(options.color)) {
+      return options.color(point)
+    } else {
+      return options.color
+    }
+  },
+
   _drawTrackLine: function (trackpoints) {
     let options = this.trackLineOptions
     let tp0 = this._getLayerPoint(trackpoints[0])
@@ -222,7 +231,7 @@ export const Draw = L.Class.extend({
     }
     this._ctx.globalAlpha = options.opacity
     if (options.stroke) {
-      this._ctx.strokeStyle = options.color
+      this._ctx.strokeStyle = this._getTrackLineColor(options, trackpoints[0])
       this._ctx.lineWidth = options.weight
       this._ctx.stroke()
     }

@@ -35,8 +35,17 @@
         const data = JSON.parse(xhr.responseText);
         const trackplayback = L.trackplayback(data, map, {
           targetOptions: {
+            hideWhenEnd: true,
             useImg: true,
             imgUrl: 'examples/ship.png'
+          },
+          trackLineOptions: {
+            isDraw: true,
+            color: (point) => {
+              console.log(point);
+              return 'green'
+            },
+          opacity: 0.9
           }
         });
         const trackplaybackControl = L.trackplaybackcontrol(trackplayback);

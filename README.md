@@ -124,7 +124,7 @@ const Options = {
     // whether draw track line
     isDraw: false,
     stroke: true,
-    color: '#1C54E2',
+    color: '#1C54E2' || (point) => '#1C54E2',
     weight: 2,
     fill: false,
     fillColor: '#000',
